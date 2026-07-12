@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#A62B52">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Bloody Moody</title>
+<style>
+:root{
+  --bg:#FAF6F4; --card:#FFFFFF; --ink:#2C2127; --muted:#8A767F; --line:#EBDDE2;
+  --accent:#A62B52; --accent-ink:#FFFFFF; --accent-soft:#F7E3EA;
+  --chip:#F5EEF1; --chip-ink:#5C4A53; --grid:#F0E4E9; --axis:#D9C6CE;
+  --c-old:#E5AFC4; --c-mid:#C9678F; --c-new:#93244D;
+  --ph-mens:#C22F55; --ph-foll:#2E8B6E; --ph-ovu:#C98A00; --ph-lut:#7A5FA8; --ph-pms:#4E6E9E;
+  --danger:#C0392B; --shadow:0 1px 3px rgba(44,33,39,.07),0 4px 14px rgba(44,33,39,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#171014; --card:#231923; --ink:#F2E7EC; --muted:#A78F9B; --line:#3A2C35;
+    --accent:#E9799D; --accent-ink:#2C0F1B; --accent-soft:#3C2331;
+    --chip:#2E212B; --chip-ink:#CBB4BF; --grid:#32242D; --axis:#4A3843;
+    --c-old:#6E3C55; --c-mid:#B05F86; --c-new:#F193B9;
+    --ph-mens:#F27C9F; --ph-foll:#5FC9A4; --ph-ovu:#F0B84A; --ph-lut:#B49BE0; --ph-pms:#8FB0DC;
+    --danger:#E4685A; --shadow:0 1px 3px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#171014; --card:#231923; --ink:#F2E7EC; --muted:#A78F9B; --line:#3A2C35;
+  --accent:#E9799D; --accent-ink:#2C0F1B; --accent-soft:#3C2331;
+  --chip:#2E212B; --chip-ink:#CBB4BF; --grid:#32242D; --axis:#4A3843;
+  --c-old:#6E3C55; --c-mid:#B05F86; --c-new:#F193B9;
+  --ph-mens:#F27C9F; --ph-foll:#5FC9A4; --ph-ovu:#F0B84A; --ph-lut:#B49BE0; --ph-pms:#8FB0DC;
+  --danger:#E4685A; --shadow:0 1px 3px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+}
+:root[data-theme="light"]{
+  --bg:#FAF6F4; --card:#FFFFFF; --ink:#2C2127; --muted:#8A767F; --line:#EBDDE2;
+  --accent:#A62B52; --accent-ink:#FFFFFF; --accent-soft:#F7E3EA;
+  --chip:#F5EEF1; --chip-ink:#5C4A53; --grid:#F0E4E9; --axis:#D9C6CE;
+  --c-old:#E5AFC4; --c-mid:#C9678F; --c-new:#93244D;
+  --ph-mens:#C22F55; --ph-foll:#2E8B6E; --ph-ovu:#C98A00; --ph-lut:#7A5FA8; --ph-pms:#4E6E9E;
+  --danger:#C0392B; --shadow:0 1px 3px rgba(44,33,39,.07),0 4px 14px rgba(44,33,39,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+.wrap{max-width:560px;margin:0 auto;padding:16px 14px 96px}
+header.app{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:6px 2px 14px}
+h1{font-size:22px;font-weight:800;letter-spacing:-.4px;margin:0}
+h1 .drop{color:var(--accent)}
+.daychip{font-size:12.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);
+  border-radius:999px;padding:4px 12px;white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.glabel{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font:inherit;font-size:14px;color:var(--chip-ink);background:var(--chip);
+  border:1.5px solid transparent;border-radius:999px;padding:7px 13px;cursor:pointer;
+  transition:background .12s,border-color .12s,color .12s;
+}
+.chip:active{transform:scale(.97)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.formgroup{margin-bottom:18px}
+.formgroup:last-child{margin-bottom:0}
+textarea{
+  width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--chip);
+  border:1.5px solid transparent;border-radius:12px;padding:10px 12px;resize:vertical;min-height:52px;
+}
+textarea:focus{outline:none;border-color:var(--accent)}
+.bigbtn{
+  display:block;width:100%;font:inherit;font-size:16px;font-weight:800;
+  background:var(--accent);color:var(--accent-ink);border:none;border-radius:14px;
+  padding:14px;cursor:pointer;letter-spacing:.01em;
+}
+.bigbtn:active{transform:scale(.99)}
+.smallbtn{
+  font:inherit;font-size:13.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);
+  border:none;border-radius:10px;padding:9px 14px;cursor:pointer;
+}
+.smallbtn.ghost{background:var(--chip);color:var(--chip-ink)}
+.smallbtn.danger{background:transparent;color:var(--danger);border:1.5px solid var(--danger)}
+.datenav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+.datenav button{
+  font:inherit;font-size:18px;font-weight:700;color:var(--accent);background:var(--accent-soft);
+  border:none;border-radius:10px;width:38px;height:38px;cursor:pointer;
+}
+.datenav button:disabled{opacity:.35;cursor:default}
+.datenav .dlabel{font-weight:800;font-size:16px;text-align:center;flex:1}
+.datenav .dlabel small{display:block;font-weight:600;font-size:12px;color:var(--muted)}
+.note-soft{
+  font-size:13.5px;background:var(--accent-soft);border-radius:12px;padding:10px 12px;
+  color:var(--ink);margin-top:10px;line-height:1.5;
+}
+/* forecast */
+.fc-phase{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16.5px;margin-bottom:6px}
+.fc-dot{width:11px;height:11px;border-radius:50%;flex:none}
+.fc-body{font-size:14.5px}
+.fc-body p{margin:0 0 8px}
+.fc-eta{font-size:13px;color:var(--muted);font-weight:600}
+.fc-insights{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+.fc-insights .glabel{margin-bottom:6px}
+.fc-insights ul{margin:0;padding-left:18px;font-size:14px}
+.fc-insights li{margin-bottom:4px}
+.fc-mode{margin-top:10px;font-size:12px;color:var(--muted);font-style:italic}
+/* tabs */
+nav.tabs{
+  position:fixed;bottom:0;left:0;right:0;background:var(--card);
+  border-top:1px solid var(--line);display:flex;justify-content:center;z-index:50;
+  padding-bottom:env(safe-area-inset-bottom,0);
+}
+nav.tabs .inner{display:flex;width:100%;max-width:560px}
+nav.tabs button{
+  flex:1;font:inherit;font-size:11px;font-weight:700;color:var(--muted);
+  background:none;border:none;padding:8px 4px 10px;cursor:pointer;display:flex;
+  flex-direction:column;align-items:center;gap:2px;
+}
+nav.tabs button .ico{font-size:19px;line-height:1}
+nav.tabs button.on{color:var(--accent)}
+section.tab{display:none}
+section.tab.on{display:block}
+/* charts */
+.metricchips{margin-bottom:12px}
+.chartbox{overflow-x:auto}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin-top:8px}
+.legend .sw{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.readout{font-size:13px;color:var(--muted);margin-top:8px;min-height:1.2em}
+.striplabels{font-size:12px}
+.empty{color:var(--muted);font-size:14px;text-align:center;padding:24px 8px}
+/* history */
+.cychead{font-weight:800;font-size:14px;margin:16px 2px 8px;display:flex;justify-content:space-between;align-items:baseline}
+.cychead small{font-weight:600;color:var(--muted)}
+.hrow{
+  display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:10px 12px;margin-bottom:6px;cursor:pointer;
+}
+.hrow .hd{font-weight:700;font-size:13px;min-width:64px}
+.hrow .hd small{display:block;font-weight:600;color:var(--muted);font-size:11px}
+.hrow .hi{flex:1;font-size:15px;letter-spacing:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.hrow .demo{font-size:10px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+/* data tab */
+.statline{font-size:14px;margin-bottom:14px}
+.statline b{font-variant-numeric:tabular-nums}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+#io{display:none;margin-top:10px}
+#io textarea{min-height:120px;font-size:11.5px;font-family:ui-monospace,Consolas,monospace}
+.finetext{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:14px}
+/* toast */
+#toast{
+  position:fixed;left:50%;bottom:76px;transform:translateX(-50%) translateY(10px);
+  background:var(--ink);color:var(--bg);font-size:13.5px;font-weight:700;
+  padding:9px 18px;border-radius:999px;opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;z-index:99;max-width:88vw;text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important}
+}
+</style>
+
+<div class="wrap">
+  <header class="app">
+    <h1>bloody moody<span class="drop">.</span></h1>
+    <span class="daychip" id="headchip">…</span>
+  </header>
+
+  <!-- TODAY -->
+  <section class="tab on" id="tab-today">
+    <div class="card" id="forecast"></div>
+    <div class="card">
+      <div class="datenav">
+        <button id="dprev" aria-label="previous day">‹</button>
+        <div class="dlabel" id="dlabel"></div>
+        <button id="dnext" aria-label="next day">›</button>
+      </div>
+      <div id="checkin"></div>
+      <div class="note-soft" id="darknote" hidden>
+        Logged. Dark thoughts are a real cycle symptom, not a character flaw — be extra soft
+        with yourself today. If they get heavy or scary, please reach out to someone you trust
+        or a professional. You matter more than this app's sass. 💛
+      </div>
+      <div class="formgroup" style="margin-top:16px">
+        <p class="glabel">Note (optional)</p>
+        <textarea id="note" placeholder="anything else about today…"></textarea>
+      </div>
+      <button class="bigbtn" id="savebtn">Save day</button>
+    </div>
+  </section>
+
+  <!-- CHARTS -->
+  <section class="tab" id="tab-charts">
+    <div class="card">
+      <p class="glabel">Cycles overlaid by cycle day</p>
+      <div class="chips metricchips" id="metricchips"></div>
+      <div id="chartarea"></div>
+    </div>
+    <div class="card" id="stripcard">
+      <p class="glabel">Pattern strips — how often, by cycle day</p>
+      <div id="striparea"></div>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="tab" id="tab-history">
+    <div id="historyarea"></div>
+  </section>
+
+  <!-- DATA -->
+  <section class="tab" id="tab-data">
+    <div class="card">
+      <p class="glabel">Your data</p>
+      <p class="statline" id="stats"></p>
+      <div class="btnrow">
+        <button class="smallbtn" id="exportbtn">Export backup</button>
+        <button class="smallbtn ghost" id="importbtn">Import</button>
+      </div>
+      <div id="io">
+        <textarea id="iotext" placeholder='paste a backup JSON here, then tap "Import this"'></textarea>
+        <div class="btnrow" style="margin-top:8px">
+          <button class="smallbtn" id="iocopy">Copy to clipboard</button>
+          <button class="smallbtn ghost" id="ioimport">Import this</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="glabel">Sample data</p>
+      <p class="finetext" style="margin-top:0">Want to see the charts and forecasts in action
+      before you have 3 months of history? Load fake sample cycles — they're tagged, and you
+      can remove them anytime without touching your real entries.</p>
+      <div class="btnrow" style="margin-top:10px">
+        <button class="smallbtn ghost" id="samplebtn">Load sample data</button>
+        <button class="smallbtn ghost" id="clearsamplebtn">Remove sample data</button>
+      </div>
+    </div>
+    <div class="card">
+      <p class="glabel">Danger zone</p>
+      <div class="btnrow" style="margin-top:10px">
+        <button class="smallbtn danger" id="erasebtn">Erase ALL data</button>
+      </div>
+    </div>
+    <p class="finetext">Everything lives only in this browser on this device — nothing is sent
+    anywhere. Export a backup now and then so you don't lose your history.<br><br>
+    This is a pattern-spotting tool for self-knowledge, made with love and sarcasm. It is
+    <b>not</b> medical advice and <b>not</b> contraception. If something feels genuinely off,
+    see an actual doctor.</p>
+  </section>
+</div>
+
+<nav class="tabs"><div class="inner">
+  <button data-tab="today" class="on"><span class="ico">✍️</span>Today</button>
+  <button data-tab="charts"><span class="ico">📈</span>Charts</button>
+  <button data-tab="history"><span class="ico">🗓️</span>History</button>
+  <button data-tab="data"><span class="ico">💾</span>Data</button>
+</div></nav>
+
+<div id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ============ constants ============ */
+const MOODS=[
+  {v:"balanced",e:"🧘",l:"balanced",s:4},{v:"happy",e:"😊",l:"happy",s:5},
+  {v:"normal",e:"😐",l:"normal",s:3},{v:"stressed",e:"😵‍💫",l:"stressed",s:2},
+  {v:"sad",e:"😢",l:"sad",s:1.5},{v:"angry",e:"😡",l:"angry",s:1},
+  {v:"dark",e:"🌑",l:"dark thoughts",s:0}];
+const ENERGY=[
+  {v:"energetic",e:"⚡",l:"energetic",s:3},{v:"active",e:"🚶",l:"average active",s:2},
+  {v:"unmotivated",e:"🦥",l:"unmotivated",s:1},{v:"fatigue",e:"🪫",l:"fatigue",s:0}];
+const CRAVINGS=[
+  {v:"salt",e:"🧂",l:"salt"},{v:"sweet",e:"🍫",l:"sweet"},
+  {v:"meat",e:"🥩",l:"meat"},{v:"bread",e:"🥖",l:"bread"}];
+const BODY=[
+  {v:"pimples",e:"💥",l:"pimples"},{v:"boobs",e:"🍈",l:"boobs pain"},{v:"cramps",e:"🌀",l:"cramps"}];
+const FLOW=[
+  {v:"none",e:"·",l:"none"},{v:"spotting",e:"💧",l:"spotting"},{v:"light",e:"🩸",l:"light"},
+  {v:"medium",e:"🩸🩸",l:"medium"},{v:"heavy",e:"🩸🩸🩸",l:"heavy"}];
+const FLOWSET=new Set(["light","medium","heavy"]);
+const moodScore=Object.fromEntries(MOODS.map(m=>[m.v,m.s]));
+const energyScore=Object.fromEntries(ENERGY.map(m=>[m.v,m.s]));
+const emojiOf={}; [...MOODS,...ENERGY,...CRAVINGS,...BODY].forEach(x=>emojiOf[x.v]=x.e);
+
+const PHASES={
+  menstrual:{name:"Bleed Week",cv:"--ph-mens",blurbs:[
+    "Uterus demolition derby in progress. Iron's low, so being horizontal is a fucking valid lifestyle choice right now. Warm drinks, gentle movement, zero guilt.",
+    "Crime scene mode. Cramps may try to negotiate — heat pads are your lawyer. Rest counts as productivity this week; that's biology, not an excuse.",
+    "Your uterus is doing renovations without a permit. Cancel what's cancelable and let the couch win. The couch always deserved to win.",
+    "PSA: you're not lazy, you're literally losing blood. Victorian ladies fainted over less. Nap with pride.",
+    "Cramps are just your uterus leaving angry Yelp reviews. Heat pad, painkillers if you need them, and zero heroics at the gym.",
+    "It's giving 'main character in a tragedy' — and that's allowed. Bleed, rest, repeat. The comeback era is already loading.",
+    "Iron's dipping: steak, lentils, spinach, dark chocolate — whatever's your poison, feed the machine. Horizontal counts as a hobby this week.",
+    "The only thing you owe the world right now is showing up-ish. Everything else is bonus content. Hydrate and be smug about surviving.",
+    "Blood loss is NOT cardio, put the gym plan down. Gentle walks, hot drinks, early nights — boring advice because boring works."]},
+  follicular:{name:"Follicular — the comeback era",cv:"--ph-foll",blurbs:[
+    "Estrogen is climbing and so are you. This is your 'ideas at 7am' era — book the scary stuff now, energy is officially on your side.",
+    "Main-character energy incoming. If you feel weirdly optimistic today, that's not delusion, that's follicular. Ride it.",
+    "Brain's back online, skin's clearing, ideas are getting loud. This is the week to start shit — the good kind of shit.",
+    "Estrogen said 'let's fucking go' and honestly? Agreed. Book the workout, send the message, wear the outfit.",
+    "You know those people who wake up at 6am and ENJOY it? That's you for the next week-ish. Exploit it shamelessly.",
+    "Energy budget: generous. Optimism: suspiciously high. It's not a scam, it's your follicular phase. Spend it all.",
+    "Been putting something off? This is your biological green light. Future-you — the PMS one — will thank present-you.",
+    "The comeback continues: hard workouts land better, the social battery charges fast, and food is just food again instead of an emotional event.",
+    "Whatever you plant this week grows. Habits, projects, gym streaks — your hormones are literally your hype squad right now."]},
+  ovulation:{name:"Ovulation Window",cv:"--ph-ovu",blurbs:[
+    "Peak everything: energy, skin, charm, and — statistically — the horny days. Use responsibly. Or don't. 😏",
+    "You're running on premium fuel for about 3 days. Social stuff, hard workouts, big asks — do them NOW.",
+    "Nature is making its move: you're magnetic, energized, and probably eyeing someone. Biology has never been subtle.",
+    "Peak week: best skin, best mood, best lifts. If you have one big thing to crush this month, crush it now.",
+    "Warning: charm levels critically high. Flirt responsibly. 🔥",
+    "This is the 'why is everything suddenly easy' window. It's short, so do the scary task while you're temporarily invincible.",
+    "Hormonal happy hour: energy, libido and confidence are all pouring doubles. Last call in a few days — enjoy it."]},
+  luteal:{name:"Luteal — the wind-down",cv:"--ph-lut",blurbs:[
+    "Progesterone took the wheel. Energy dips are normal — swap beast-mode workouts for walks and do NOT schedule hell weeks.",
+    "The cozy era. If 'blanket + snacks' is the vibe, that's chemistry, not laziness. Lean in.",
+    "Downshift week. Your body's redirecting resources, so if the gym feels 20% harder — it literally is. Walks, yoga, naps: all count.",
+    "Hunger is real this phase — progesterone burns more fuel. Feed the machine actual meals, not vibes and iced coffee.",
+    "The introvert phase: social battery drains faster and focus turns inward. Schedule accordingly and don't fight it.",
+    "Energy's on airplane mode, not broken. Cozy productivity beats heroic productivity now — lower the bar and still clear it.",
+    "If motivation mysteriously vanished, it's not you — the luteal dip is a documented phenomenon. Adjust expectations, keep moving gently.",
+    "Your body is quietly preparing for either a tenant or a demolition. Both are hard work. Snacks and early bedtimes are rent."]},
+  pms:{name:"PMS Zone",cv:"--ph-pms",blurbs:[
+    "Welcome to the 'everyone chews too fucking loud' days. It's hormones, not your actual life falling apart. Be offensively kind to yourself — it lifts once you bleed.",
+    "PMS has entered the chat. Crying at a dog food ad? That's the progesterone crash, not weakness. Sugar cravings are basically mandatory. This shit passes, usually day 1–2 of your period.",
+    "Storm warning: irritability, sugar fiending, and the sudden conviction that everyone's an idiot. They're not (mostly). Lift lighter, sleep earlier, snack shamelessly.",
+    "If you suddenly hate your hair, your job, and your entire life — consult the calendar before making any decisions. This mood has an expiration date, and it's soon.",
+    "Progesterone is crashing and taking your patience down with it. Cancel optional plans, buy the chocolate, guard your sleep like a dragon.",
+    "Your fuse is short, your cravings are loud, and crying at nothing is on the menu. None of this is a personality flaw — it's chemistry doing its worst.",
+    "Pro tip: this is the WORST week to interpret texts, weigh yourself, or evaluate your life choices. Snacks and early nights only.",
+    "The 'everything is too much' era. Be aggressively gentle with yourself: lighter workouts, earlier bedtime, zero big decisions. Bleeding = reset button, and it's close.",
+    "Whatever crime your loved ones committed today, consider a suspended sentence — the judge is hormonal. Verdict gets overturned in a few days anyway."]}
+};
+
+const STORE_KEY="bloodymoody.v1";
+const DAY=86400000;
+
+/* ============ storage & dates ============ */
+let store=load();
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(STORE_KEY));if(s&&s.entries)return s;}catch(e){}
+  return {v:1,entries:{}};
+}
+function persist(){localStorage.setItem(STORE_KEY,JSON.stringify(store));}
+function d2s(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function s2d(s){const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
+function todayStr(){return d2s(new Date());}
+function addDays(s,n){const d=s2d(s);d.setDate(d.getDate()+n);return d2s(d);}
+function diffDays(a,b){return Math.round((s2d(b)-s2d(a))/DAY);}
+function fmtShort(s){return s2d(s).toLocaleDateString(undefined,{month:"short",day:"numeric"});}
+function fmtLong(s){return s2d(s).toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});}
+function hashStr(s){let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0;}return Math.abs(h);}
+
+/* ============ cycle math ============ */
+function sortedDates(){return Object.keys(store.entries).sort();}
+function cycleStarts(){
+  const flow=sortedDates().filter(d=>FLOWSET.has(store.entries[d].flow));
+  const starts=[];
+  for(const d of flow){
+    const prior=flow.some(f=>f<d && diffDays(f,d)<=5);
+    if(!prior)starts.push(d);
+  }
+  return starts;
+}
+function cycleInfo(){
+  const starts=cycleStarts();
+  const cycles=starts.map((s,i)=>({
+    start:s,
+    end:i<starts.length-1?addDays(starts[i+1],-1):null,
+    len:i<starts.length-1?diffDays(s,starts[i+1]):null
+  }));
+  const lens=cycles.map(c=>c.len).filter(l=>l&&l>=15&&l<=60).slice(-6);
+  const avgLen=lens.length?Math.round(lens.reduce((a,b)=>a+b,0)/lens.length):28;
+  // avg bleeding length: consecutive bleeding days (any flow incl. spotting) from each start
+  const plens=[];
+  for(const c of cycles){
+    let n=0;
+    while(n<12){const e=store.entries[addDays(c.start,n)];if(e&&e.flow&&e.flow!=="none")n++;else break;}
+    if(n>0)plens.push(n);
+  }
+  const avgPeriod=plens.length?Math.round(plens.reduce((a,b)=>a+b,0)/plens.length):5;
+  return {cycles,starts,avgLen,avgPeriod,completed:lens.length};
+}
+function phaseForDay(d,L,P){
+  if(d<=P)return "menstrual";
+  if(d>=L-5)return "pms";
+  if(d>=L-16&&d<=L-12)return "ovulation";
+  if(d>L-12)return "luteal";
+  return "follicular";
+}
+function entriesByCycle(ci){
+  return ci.cycles.map(c=>{
+    const days=new Map();
+    const end=c.end||todayStr();
+    for(const[dt,e]of Object.entries(store.entries)){
+      if(dt>=c.start&&dt<=end)days.set(diffDays(c.start,dt)+1,e);
+    }
+    return {...c,days};
+  });
+}
+
+/* ============ scoring ============ */
+function moodVal(e){
+  if(!e.moods||!e.moods.length)return null;
+  return e.moods.reduce((a,m)=>a+(moodScore[m]??3),0)/e.moods.length;
+}
+function energyVal(e){return e.energy?energyScore[e.energy]:null;}
+function irrVal(e){return (e.irritation===0||e.irritation>0)?e.irritation:null;}
+
+/* ============ forecast ============ */
+function buildForecast(){
+  const box=document.getElementById("forecast");
+  const chip=document.getElementById("headchip");
+  const ci=cycleInfo();
+  const today=todayStr();
+  if(!ci.starts.length){
+    chip.textContent="cycle: unknown";
+    box.innerHTML=`<div class="fc-phase">👋 Hey, let's get started</div>
+    <div class="fc-body"><p>Log a quick check-in every day (30 seconds, promise). When your
+    period arrives, tap the flow level — that's day 1, and it's how I learn your cycle.</p>
+    <p>Generic phase info unlocks after your first period start; <b>your personal
+    predictions</b> unlock after 2–3 full cycles. Then I start telling you what's coming. 🔮</p></div>`;
+    return;
+  }
+  const lastStart=ci.starts[ci.starts.length-1];
+  const cd=diffDays(lastStart,today)+1;
+  const L=ci.avgLen,P=ci.avgPeriod;
+  const late=cd>L+2;
+  const pk=phaseForDay(Math.min(cd,L),L,P);
+  const ph=PHASES[pk];
+  chip.textContent=`day ${cd} · ${ph.name.split(" —")[0].split(" (")[0]}`;
+  let html=`<div class="fc-phase"><span class="fc-dot" style="background:var(${ph.cv})"></span>
+    Day ${cd} — ${ph.name}</div><div class="fc-body">`;
+  if(late){
+    html+=`<p>Cycle's running late — day ${cd} vs your usual ~${L}. Cycles drift for a
+    million boring reasons (stress, travel, bad sleep). Log your period when it shows up
+    and I'll recalibrate. If it's very late and that worries you, you know what to do. 🤷‍♀️</p>`;
+  }else{
+    html+=`<p>${ph.blurbs[(cd+ci.starts.length)%ph.blurbs.length]}</p>`;
+    // incoming phase change within 3 days
+    for(let i=1;i<=3;i++){
+      const nk=phaseForDay(((cd+i-1)%L)+1,L,P);
+      if(nk!==pk){
+        html+=`<p>📅 Incoming: <b>${PHASES[nk].name}</b> in ${i} day${i>1?"s":""}.</p>`;
+        break;
+      }
+    }
+    if(pk!=="menstrual"){
+      const eta=L-cd+1;
+      if(eta>0)html+=`<p class="fc-eta">🩸 Period ETA: ~${fmtShort(addDays(lastStart,L))} (${eta} day${eta>1?"s":""} away)</p>`;
+    }
+  }
+  html+=`</div>`;
+  // personalized insights
+  if(ci.completed>=2){
+    const ins=personalInsights(ci,cd);
+    if(ins.length){
+      html+=`<div class="fc-insights"><p class="glabel">Your pattern, next 3 days</p><ul>`;
+      for(const s of ins)html+=`<li>${s}</li>`;
+      html+=`</ul></div>`;
+    }
+    html+=`<div class="fc-mode">based on your ${ci.completed} logged cycle${ci.completed>1?"s":""} — the more you log, the sharper I get</div>`;
+  }else{
+    html+=`<div class="fc-mode">textbook mode — your personal patterns unlock after 2–3 full cycles (${ci.completed} done so far)</div>`;
+  }
+  box.innerHTML=html;
+}
+function personalInsights(ci,cd){
+  const L=ci.avgLen;
+  const targets=new Set();
+  for(let i=0;i<=4;i++)targets.add(((cd+i-1)%L)+1); // next days ±1 tolerance
+  const past=entriesByCycle(ci).filter(c=>c.len); // completed only
+  const hits=[];
+  for(const c of past)for(const[day,e]of c.days)if(targets.has(day))hits.push(e);
+  if(hits.length<3)return [];
+  const n=hits.length,out=[];
+  const frac=f=>hits.filter(f).length/n;
+  // dominant rough mood
+  const roughMoods=["stressed","sad","angry"];
+  for(const m of roughMoods){
+    const fr=frac(e=>e.moods&&e.moods.includes(m));
+    if(fr>=0.4){const mm=MOODS.find(x=>x.v===m);
+      out.push(`${mm.e} <b>${mm.l}</b> showed up around now in ${Math.round(fr*100)}% of check-ins — if it hits out of nowhere, it's the cycle, not you.`);break;}
+  }
+  const happyFr=frac(e=>e.moods&&(e.moods.includes("happy")||e.moods.includes("balanced")));
+  if(happyFr>=0.6&&!out.length)out.push(`😊 Good news: these days are historically <b>solid mood days</b> for you (${Math.round(happyFr*100)}%). Enjoy, you've earned it.`);
+  // dark thoughts — gentle, no jokes
+  const darkN=hits.filter(e=>e.moods&&e.moods.includes("dark")).length;
+  if(darkN>=2)out.push(`🌑 Heads-up, said gently: dark thoughts have clustered around these days before. Plan something kind for yourself, keep people close, and remember it's the hormones lying — it passes.`);
+  // irritation
+  const irrs=hits.map(irrVal).filter(v=>v!==null);
+  if(irrs.length>=3){
+    const avg=irrs.reduce((a,b)=>a+b,0)/irrs.length;
+    if(avg>=1.8)out.push(`💣 Fuse forecast: short as fuck (your avg irritation here is ${avg.toFixed(1)}/3). Maybe don't answer that annoying email today.`);
+  }
+  // cravings
+  const cravs=CRAVINGS.map(c=>({...c,fr:frac(e=>e.cravings&&e.cravings.includes(c.v))})).filter(c=>c.fr>=0.4);
+  if(cravs.length)out.push(`${cravs.map(c=>c.e).join("")} Stock up: <b>${cravs.map(c=>c.l).join(" + ")}</b> cravings hit ${Math.round(Math.max(...cravs.map(c=>c.fr))*100)}% of the time around now. Buying it in advance is self-care, not weakness.`);
+  // energy
+  const lowE=frac(e=>e.energy==="fatigue"||e.energy==="unmotivated");
+  if(lowE>=0.5)out.push(`🪫 Energy usually dips here (${Math.round(lowE*100)}% low-energy days) — skip the heroic workouts, walks and stretching count.`);
+  const hiE=frac(e=>e.energy==="energetic");
+  if(hiE>=0.5)out.push(`⚡ Energy peak zone (${Math.round(hiE*100)}% energetic days) — great time for the hard workout or the big task.`);
+  // body
+  const bods=BODY.map(b=>({...b,fr:frac(e=>e.body&&e.body.includes(b.v))})).filter(b=>b.fr>=0.4);
+  if(bods.length)out.push(`${bods.map(b=>b.e).join("")} Body memo: <b>${bods.map(b=>b.l).join(", ")}</b> tend to show up around now. Forewarned is forearmed.`);
+  // horny
+  const hFr=frac(e=>e.horny);
+  if(hFr>=0.5)out.push(`🔥 Libido forecast: elevated (${Math.round(hFr*100)}% of the time around now). Plan accordingly. 😏`);
+  return out.slice(0,4);
+}
+
+/* ============ check-in form ============ */
+let currentDate=todayStr();
+function chipGroup(id,items,multi,label){
+  return `<div class="formgroup"><p class="glabel">${label}</p>
+  <div class="chips" id="${id}" data-multi="${multi?1:0}">
+  ${items.map(it=>`<button type="button" class="chip" data-v="${it.v}" aria-pressed="false">${it.e} ${it.l}</button>`).join("")}
+  </div></div>`;
+}
+function buildForm(){
+  const c=document.getElementById("checkin");
+  c.innerHTML=
+    chipGroup("g-mood",MOODS,true,"Mood (pick any)")+
+    chipGroup("g-energy",ENERGY,false,"Energy")+
+    `<div class="formgroup"><p class="glabel">Libido</p>
+      <div class="chips" id="g-horny" data-multi="0">
+      <button type="button" class="chip" data-v="yes" aria-pressed="false">🔥 horny</button></div></div>`+
+    chipGroup("g-irr",[0,1,2,3].map(n=>({v:String(n),e:["😇","🙂","😤","🤬"][n],l:String(n)})),false,"Irritation (0–3)")+
+    chipGroup("g-crav",CRAVINGS,true,"Food cravings")+
+    chipGroup("g-body",BODY,true,"Body")+
+    chipGroup("g-flow",FLOW,false,"Bleeding")+
+    `<div class="formgroup"><div class="chips" id="g-clots" data-multi="0">
+     <button type="button" class="chip" data-v="yes" aria-pressed="false">⚫ clots</button></div></div>`;
+  c.querySelectorAll(".chips").forEach(g=>{
+    g.addEventListener("click",ev=>{
+      const b=ev.target.closest(".chip");if(!b)return;
+      if(g.dataset.multi==="1"){b.classList.toggle("on");}
+      else{
+        const was=b.classList.contains("on");
+        g.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));
+        if(!was)b.classList.add("on");
+      }
+      g.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x.classList.contains("on")));
+      if(g.id==="g-mood")syncDarkNote();
+    });
+  });
+}
+function getSel(id){return [...document.querySelectorAll(`#${id} .chip.on`)].map(b=>b.dataset.v);}
+function setSel(id,vals){
+  const set=new Set((vals||[]).map(String));
+  document.querySelectorAll(`#${id} .chip`).forEach(b=>{
+    b.classList.toggle("on",set.has(b.dataset.v));
+    b.setAttribute("aria-pressed",set.has(b.dataset.v));
+  });
+}
+function syncDarkNote(){
+  document.getElementById("darknote").hidden=!getSel("g-mood").includes("dark");
+}
+function loadDay(){
+  const e=store.entries[currentDate]||{};
+  setSel("g-mood",e.moods);setSel("g-energy",e.energy?[e.energy]:[]);
+  setSel("g-horny",e.horny?["yes"]:[]);
+  setSel("g-irr",(e.irritation===0||e.irritation>0)?[String(e.irritation)]:[]);
+  setSel("g-crav",e.cravings);setSel("g-body",e.body);
+  setSel("g-flow",e.flow&&e.flow!=="none"?[e.flow]:(e.flow==="none"?["none"]:[]));
+  setSel("g-clots",e.clots?["yes"]:[]);
+  document.getElementById("note").value=e.note||"";
+  syncDarkNote();
+  const isToday=currentDate===todayStr();
+  document.getElementById("dlabel").innerHTML=
+    `${isToday?"Today":fmtShort(currentDate)}<small>${fmtLong(currentDate)}${store.entries[currentDate]?" · saved ✓":""}</small>`;
+  document.getElementById("dnext").disabled=isToday;
+}
+function saveDay(){
+  const irr=getSel("g-irr");
+  const e={
+    moods:getSel("g-mood"),
+    energy:getSel("g-energy")[0]||"",
+    horny:getSel("g-horny").length>0,
+    irritation:irr.length?Number(irr[0]):null,
+    cravings:getSel("g-crav"),
+    body:getSel("g-body"),
+    flow:getSel("g-flow")[0]||"none",
+    clots:getSel("g-clots").length>0,
+    note:document.getElementById("note").value.trim()
+  };
+  const empty=!e.moods.length&&!e.energy&&!e.horny&&e.irritation===null&&
+    !e.cravings.length&&!e.body.length&&e.flow==="none"&&!e.clots&&!e.note;
+  if(empty){delete store.entries[currentDate];persist();toast("Day cleared");}
+  else{
+    const old=store.entries[currentDate];
+    if(old&&old._demo)delete old._demo;
+    store.entries[currentDate]=e;persist();
+    const T=["Saved. Data is power 💪","Logged! Future-you says thanks","Saved — the oracle grows wiser 🔮",
+      "Noted. Carry on 💅","In the vault 🔐","Another day closer to mind-reading 🔮","Saved. Your uterus has been notified 📋"];
+    toast(T[hashStr(currentDate)%T.length]);
+  }
+  buildForecast();loadDay();
+}
+
+/* ============ charts ============ */
+const METRICS=[
+  {v:"mood",l:"Mood",max:5,fn:moodVal,lo:"rough",hi:"great"},
+  {v:"energy",l:"Energy",max:3,fn:energyVal,lo:"🪫",hi:"⚡"},
+  {v:"irr",l:"Irritation",max:3,fn:irrVal,lo:"0",hi:"3"}];
+let curMetric="mood";
+function buildMetricChips(){
+  const g=document.getElementById("metricchips");
+  g.innerHTML=METRICS.map(m=>`<button class="chip${m.v===curMetric?" on":""}" data-v="${m.v}">${m.l}</button>`).join("");
+  g.addEventListener("click",ev=>{
+    const b=ev.target.closest(".chip");if(!b)return;
+    curMetric=b.dataset.v;
+    g.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on",x.dataset.v===curMetric));
+    renderChart();
+  });
+}
+function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function renderChart(){
+  const area=document.getElementById("chartarea");
+  const ci=cycleInfo();
+  const cycles=entriesByCycle(ci).slice(-4);
+  if(!ci.starts.length||!cycles.some(c=>c.days.size)){
+    area.innerHTML=`<div class="empty">No cycle data yet. Once you've logged your first period
+    start (+ some daily check-ins), your cycles get overlaid here and the pattern becomes
+    embarrassingly obvious. 📈</div>`;
+    return;
+  }
+  const M=METRICS.find(m=>m.v===curMetric);
+  const xmax=Math.min(45,Math.max(ci.avgLen,...cycles.map(c=>Math.max(0,...c.days.keys()))));
+  const W=680,H=260,padL=34,padR=12,padT=14,padB=26;
+  const xw=(W-padL-padR)/(xmax-1||1), yh=H-padT-padB;
+  const X=d=>padL+(d-1)*xw, Y=v=>padT+yh*(1-v/M.max);
+  const ramp=[cssVar("--c-old"),cssVar("--c-old"),cssVar("--c-mid"),cssVar("--c-new")].slice(-cycles.length);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:480px;display:block" id="mainchart" role="img" aria-label="${M.l} by cycle day">`;
+  // phase bands
+  const L=ci.avgLen,P=ci.avgPeriod;
+  const bands=[[1,P,"--ph-mens"],[Math.max(1,L-16),L-12,"--ph-ovu"],[L-5,Math.min(L,xmax),"--ph-pms"]];
+  for(const[a,b,cv]of bands){
+    if(b>=a&&a<=xmax)svg+=`<rect x="${X(a)-xw/2}" y="${padT}" width="${(Math.min(b,xmax)-a+1)*xw}" height="${yh}" fill="var(${cv})" opacity="0.07"/>`;
+  }
+  // grid + axis
+  for(let v=0;v<=M.max;v+=(M.max>4?1:1)){
+    svg+=`<line x1="${padL}" y1="${Y(v)}" x2="${W-padR}" y2="${Y(v)}" stroke="var(--grid)" stroke-width="1"/>`;
+  }
+  svg+=`<text x="${padL-6}" y="${Y(M.max)+4}" text-anchor="end" font-size="10" fill="var(--muted)">${M.hi}</text>`;
+  svg+=`<text x="${padL-6}" y="${Y(0)+4}" text-anchor="end" font-size="10" fill="var(--muted)">${M.lo}</text>`;
+  for(let d=1;d<=xmax;d+=(xmax>30?7:5)){
+    svg+=`<text x="${X(d)}" y="${H-8}" text-anchor="middle" font-size="10" fill="var(--muted)">${d}</text>`;
+  }
+  svg+=`<text x="${W-padR}" y="${H-8}" text-anchor="end" font-size="10" fill="var(--muted)">cycle day</text>`;
+  svg+=`<line x1="${padL}" y1="${Y(0)}" x2="${W-padR}" y2="${Y(0)}" stroke="var(--axis)" stroke-width="1"/>`;
+  // lines
+  const legend=[];
+  cycles.forEach((c,i)=>{
+    const col=ramp[i],latest=i===cycles.length-1;
+    legend.push({col,label:`started ${fmtShort(c.start)}${latest?" (current)":""}`});
+    let path="",prev=null;
+    for(let d=1;d<=xmax;d++){
+      const e=c.days.get(d);const v=e?M.fn(e):null;
+      if(v===null||v===undefined){prev=null;continue;}
+      path+=(prev===null?"M":"L")+X(d).toFixed(1)+" "+Y(v).toFixed(1);prev=v;
+      svg+=`<circle cx="${X(d)}" cy="${Y(v)}" r="${latest?3:2.2}" fill="${col}"/>`;
+    }
+    if(path)svg+=`<path d="${path}" fill="none" stroke="${col}" stroke-width="${latest?2.5:2}" stroke-linejoin="round" stroke-linecap="round" ${latest?"":'opacity="0.75"'}/>`;
+  });
+  svg+=`<line id="cursor" x1="0" y1="${padT}" x2="0" y2="${padT+yh}" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" visibility="hidden"/>`;
+  svg+=`</svg>`;
+  area.innerHTML=`<div class="chartbox">${svg}</div>
+    <div class="legend">${legend.map(l=>`<span><span class="sw" style="background:${l.col}"></span>${l.label}</span>`).join("")}</div>
+    <div class="readout" id="readout">tap the chart to inspect a day</div>`;
+  // tap-to-inspect
+  const el=document.getElementById("mainchart");
+  const inspect=ev=>{
+    const r=el.getBoundingClientRect();
+    const px=(ev.clientX-r.left)/r.width*W;
+    const d=Math.max(1,Math.min(xmax,Math.round((px-padL)/xw)+1));
+    const cur=el.querySelector("#cursor");
+    cur.setAttribute("x1",X(d));cur.setAttribute("x2",X(d));cur.setAttribute("visibility","visible");
+    const parts=cycles.map((c,i)=>{
+      const e=c.days.get(d);if(!e)return null;
+      const v=M.fn(e);if(v===null||v===undefined)return null;
+      return `${fmtShort(c.start)}: <b>${(+v).toFixed(1)}</b>`;
+    }).filter(Boolean);
+    document.getElementById("readout").innerHTML=
+      `Day ${d} — ${parts.length?parts.join(" · "):"nothing logged"}`;
+  };
+  el.addEventListener("pointerdown",inspect);
+  el.addEventListener("pointermove",ev=>{if(ev.buttons)inspect(ev);});
+}
+function renderStrips(){
+  const area=document.getElementById("striparea");
+  const ci=cycleInfo();
+  const cycles=entriesByCycle(ci);
+  if(!ci.starts.length||!cycles.some(c=>c.days.size)){
+    area.innerHTML=`<div class="empty">Cravings, symptoms and 🔥 days will show up here as
+    heat-strips once there's cycle data — darker dot = happens more often on that cycle day.</div>`;
+    return;
+  }
+  const xmax=Math.min(45,Math.max(ci.avgLen,...cycles.map(c=>Math.max(0,...c.days.keys()))));
+  const rows=[
+    ...CRAVINGS.map(c=>({e:c.e,l:c.l,fn:x=>x.cravings&&x.cravings.includes(c.v)})),
+    ...BODY.map(b=>({e:b.e,l:b.l,fn:x=>x.body&&x.body.includes(b.v)})),
+    {e:"🔥",l:"horny",fn:x=>x.horny},
+    {e:"🌑",l:"dark thoughts",fn:x=>x.moods&&x.moods.includes("dark")}
+  ];
+  const W=680,rh=20,padL=110,padR=12,padT=6,padB=22;
+  const H=padT+rows.length*rh+padB;
+  const xw=(W-padL-padR)/(xmax-1||1);
+  const X=d=>padL+(d-1)*xw;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:480px;display:block">`;
+  rows.forEach((row,ri)=>{
+    const y=padT+ri*rh+rh/2;
+    svg+=`<text x="${padL-10}" y="${y+3.5}" text-anchor="end" font-size="11" fill="var(--muted)">${row.e} ${row.l}</text>`;
+    for(let d=1;d<=xmax;d++){
+      let hit=0,tot=0;
+      for(const c of cycles){const e=c.days.get(d);if(e){tot++;if(row.fn(e))hit++;}}
+      if(!tot||!hit)continue;
+      const fr=hit/tot;
+      svg+=`<circle cx="${X(d)}" cy="${y}" r="${4+fr*2.5}" fill="var(--c-new)" opacity="${(0.25+fr*0.75).toFixed(2)}"/>`;
+    }
+  });
+  for(let d=1;d<=xmax;d+=(xmax>30?7:5)){
+    svg+=`<text x="${X(d)}" y="${H-6}" text-anchor="middle" font-size="10" fill="var(--muted)">${d}</text>`;
+  }
+  svg+=`</svg>`;
+  area.innerHTML=`<div class="chartbox">${svg}</div>`;
+}
+
+/* ============ history ============ */
+function renderHistory(){
+  const area=document.getElementById("historyarea");
+  const dates=sortedDates().reverse();
+  if(!dates.length){
+    area.innerHTML=`<div class="card"><div class="empty">Nothing logged yet — go fill in today! ✍️</div></div>`;
+    return;
+  }
+  const ci=cycleInfo();
+  const startOf={};
+  for(const c of ci.cycles){const end=c.end||todayStr();
+    for(const d of dates)if(d>=c.start&&d<=end)startOf[d]=c;}
+  let html="",lastHead=null;
+  for(const d of dates){
+    const c=startOf[d];
+    const head=c?c.start:"__none";
+    if(head!==lastHead){
+      lastHead=head;
+      html+=c?`<div class="cychead">Cycle started ${fmtShort(c.start)}
+        <small>${c.len?c.len+" days":"ongoing"}</small></div>`
+        :`<div class="cychead">Before first logged period</div>`;
+    }
+    const e=store.entries[d];
+    const icons=[
+      ...(e.moods||[]).map(m=>emojiOf[m]),
+      e.energy?emojiOf[e.energy]:"",
+      e.horny?"🔥":"",
+      (e.irritation>=2)?"💣":"",
+      ...(e.cravings||[]).map(x=>emojiOf[x]),
+      ...(e.body||[]).map(x=>emojiOf[x]),
+      e.flow&&e.flow!=="none"?(FLOW.find(f=>f.v===e.flow)||{}).e:"",
+      e.clots?"⚫":"",
+      e.note?"📝":""
+    ].filter(Boolean).join(" ");
+    const cd=c?diffDays(c.start,d)+1:null;
+    html+=`<div class="hrow" data-d="${d}">
+      <div class="hd">${fmtShort(d)}${cd?`<small>day ${cd}</small>`:""}</div>
+      <div class="hi">${icons||'<span style="color:var(--muted);font-size:12px">empty</span>'}</div>
+      ${e._demo?'<span class="demo">sample</span>':""}</div>`;
+  }
+  area.innerHTML=html;
+  area.querySelectorAll(".hrow").forEach(r=>r.addEventListener("click",()=>{
+    currentDate=r.dataset.d;switchTab("today");loadDay();
+    window.scrollTo({top:0});
+  }));
+}
+
+/* ============ data tab ============ */
+function renderStats(){
+  const n=Object.keys(store.entries).length;
+  const nd=Object.values(store.entries).filter(e=>e._demo).length;
+  const ci=cycleInfo();
+  document.getElementById("stats").innerHTML=
+    `<b>${n}</b> day${n===1?"":"s"} logged${nd?` (${nd} sample)`:""} · <b>${ci.completed}</b> completed cycle${ci.completed===1?"":"s"}`+
+    (ci.completed?` · avg length <b>${ci.avgLen}</b> days`:"");
+  document.getElementById("samplebtn").style.display=
+    (n-nd)<5?"":"none";
+  document.getElementById("clearsamplebtn").style.display=nd?"":"none";
+}
+function exportData(){
+  const io=document.getElementById("io");io.style.display="block";
+  document.getElementById("iotext").value=JSON.stringify(store);
+  toast("Backup ready below — copy & keep it somewhere safe");
+}
+function importData(){
+  try{
+    const s=JSON.parse(document.getElementById("iotext").value);
+    if(!s||typeof s.entries!=="object")throw 0;
+    let n=0;
+    for(const[d,e]of Object.entries(s.entries)){
+      if(/^\d{4}-\d{2}-\d{2}$/.test(d)){store.entries[d]=e;n++;}
+    }
+    persist();refreshAll();
+    toast(`Imported ${n} day${n===1?"":"s"} ✓`);
+  }catch(e){toast("Hmm, that doesn't look like a valid backup");}
+}
+let eraseArmed=false;
+function eraseAll(){
+  const b=document.getElementById("erasebtn");
+  if(!eraseArmed){eraseArmed=true;b.textContent="Sure? Tap again to erase EVERYTHING";
+    setTimeout(()=>{eraseArmed=false;b.textContent="Erase ALL data";},4000);return;}
+  store={v:1,entries:{}};persist();eraseArmed=false;
+  b.textContent="Erase ALL data";refreshAll();toast("All gone. Fresh start 🌱");
+}
+
+/* ============ sample data ============ */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function loadSample(){
+  const rnd=mulberry32(42);
+  const pick=a=>a[Math.floor(rnd()*a.length)];
+  const today=todayStr();
+  const starts=[addDays(today,-80),addDays(today,-52),addDays(today,-25)];
+  const lens=[28,27,null];
+  let made=0;
+  starts.forEach((st,ci)=>{
+    const L=lens[ci]||28;
+    const nDays=lens[ci]||diffDays(st,today)+1;
+    for(let d=1;d<=nDays;d++){
+      const dt=addDays(st,d-1);
+      if(dt>today)break;
+      if(store.entries[dt]&&!store.entries[dt]._demo)continue;
+      if(rnd()<0.12)continue; // skipped days look real
+      const ph=phaseForDay(d,L,5);
+      const e={moods:[],energy:"",horny:false,irritation:null,cravings:[],body:[],
+        flow:"none",clots:false,note:"",_demo:true};
+      if(ph==="menstrual"){
+        e.flow=["medium","heavy","medium","light","spotting"][d-1]||"none";
+        e.clots=(d===2&&rnd()<0.7);
+        e.moods=[pick(["sad","normal","normal","balanced"])];
+        e.energy=d<=2?"fatigue":pick(["unmotivated","active"]);
+        if(d<=2)e.body=["cramps"];
+        e.irritation=1;
+      }else if(ph==="follicular"){
+        e.moods=[pick(["happy","happy","balanced","normal"])];
+        e.energy=pick(["energetic","energetic","active"]);
+        e.irritation=rnd()<0.7?0:1;
+        if(rnd()<0.2)e.cravings=["bread"];
+      }else if(ph==="ovulation"){
+        e.moods=[pick(["happy","balanced"])];
+        e.energy="energetic";e.horny=rnd()<0.8;e.irritation=0;
+      }else if(ph==="luteal"){
+        e.moods=[pick(["normal","balanced","normal","stressed"])];
+        e.energy=pick(["active","unmotivated"]);
+        e.irritation=rnd()<0.5?1:0;
+        if(rnd()<0.35)e.cravings=["meat"];
+      }else{ // pms
+        e.moods=[pick(["stressed","angry","sad","stressed"])];
+        if(rnd()<0.3)e.moods.push("sad");
+        if(d>=L-3&&rnd()<0.35)e.moods=["dark"];
+        e.energy=pick(["unmotivated","fatigue","unmotivated"]);
+        e.irritation=rnd()<0.6?3:2;
+        e.cravings=rnd()<0.75?["sweet","salt"]:["sweet"];
+        e.body=rnd()<0.6?["boobs","pimples"]:["boobs"];
+      }
+      store.entries[dt]=e;made++;
+    }
+  });
+  persist();refreshAll();
+  toast(`Loaded ${made} sample days across 3 cycles 🔮`);
+}
+function clearSample(){
+  let n=0;
+  for(const d of Object.keys(store.entries))if(store.entries[d]._demo){delete store.entries[d];n++;}
+  persist();refreshAll();toast(`Removed ${n} sample days`);
+}
+
+/* ============ shell ============ */
+function switchTab(name){
+  document.querySelectorAll("section.tab").forEach(s=>s.classList.toggle("on",s.id==="tab-"+name));
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===name));
+  if(name==="charts"){renderChart();renderStrips();}
+  if(name==="history")renderHistory();
+  if(name==="data")renderStats();
+}
+let toastTimer=null;
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2600);
+}
+function refreshAll(){
+  buildForecast();loadDay();
+  const active=document.querySelector("nav.tabs button.on").dataset.tab;
+  if(active==="charts"){renderChart();renderStrips();}
+  if(active==="history")renderHistory();
+  if(active==="data")renderStats();
+}
+/* wire up */
+document.querySelectorAll("nav.tabs button").forEach(b=>
+  b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+document.getElementById("dprev").addEventListener("click",()=>{currentDate=addDays(currentDate,-1);loadDay();});
+document.getElementById("dnext").addEventListener("click",()=>{currentDate=addDays(currentDate,1);loadDay();});
+document.getElementById("savebtn").addEventListener("click",saveDay);
+document.getElementById("exportbtn").addEventListener("click",exportData);
+document.getElementById("importbtn").addEventListener("click",()=>{
+  document.getElementById("io").style.display="block";
+  document.getElementById("iotext").value="";
+  document.getElementById("iotext").focus();
+});
+document.getElementById("iocopy").addEventListener("click",()=>{
+  const ta=document.getElementById("iotext");ta.select();
+  try{navigator.clipboard.writeText(ta.value).then(()=>toast("Copied ✓"),()=>{document.execCommand("copy");toast("Copied ✓");});}
+  catch(e){document.execCommand("copy");toast("Copied ✓");}
+});
+document.getElementById("ioimport").addEventListener("click",importData);
+document.getElementById("samplebtn").addEventListener("click",loadSample);
+document.getElementById("clearsamplebtn").addEventListener("click",clearSample);
+document.getElementById("erasebtn").addEventListener("click",eraseAll);
+
+buildForm();buildMetricChips();buildForecast();loadDay();
+</script>
+<script>
+if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js"); }
+</script>

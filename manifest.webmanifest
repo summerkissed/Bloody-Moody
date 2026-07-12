@@ -1,0 +1,14 @@
+{
+  "name": "Bloody Moody",
+  "short_name": "BloodyMoody",
+  "description": "Personal cycle & mood tracker with attitude",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FAF6F4",
+  "theme_color": "#A62B52",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
